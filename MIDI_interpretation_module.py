@@ -12,18 +12,30 @@ class BagpipeController:
     def __init__(self):
         # GPIO pin mapping for bagpipe holes/keys
         # Adjust these pin numbers 
+        """
         self.hole_to_gpio = { #change as needed
-            1: 18,  # Low G on bagpipe
-            2: 19,  # Low A
-            3: 20,  # B
-            4: 21,  # C
-            5: 22,  # D
-            6: 23,  # E
-            7: 24,  # F#
-            8: 25,  # High G
-            9: 26,  # High A
+            1: 18,  
+            2: 19,  
+            3: 20,  
+            4: 21,  
+            5: 22,  
+            6: 23,  
+            7: 24,  
+            8: 25, 
         }
-        
+        """
+        self.note_to_gpio = {
+            67: [18, 19, 20, 21, 22, 23, 24, 25],   # low G
+            69: [18, 19, 20, 21, 22, 23, 24],      # A
+            71: [18, 19, 20, 21, 22, 23],          # B
+            72: [18, 19, 20, 21, 22, 25],         # C
+            73: [18, 19, 20, 21, 22],            # C sharp
+            74: [18, 19, 20, 21, 25],            # D
+            76: [18, 19, 20, 22, 23, 24],         # E
+            78: [18, 19, 20, 23, 24],            # F sharp
+            79: [18, 20, 23, 24, 25],         # high G
+            81: [20, 22, 23, 24]       # high A
+        }
         # Bellows/air pressure control
         self.bellows_pin = 17
         
@@ -58,22 +70,22 @@ class BagpipeController:
         
     def note_on(self, note_number, velocity):
         if note_number in self.note_to_gpio:
-            pin = self.note_to_gpio[note_number]
+            pins = self.note_to_gpio[note_number]
             if GPIO_AVAILABLE:
-                GPIO.output(pin, GPIO.HIGH)  # Open hole
+                GPIO.output(pins, GPIO.HIGH)  # Open holes
             self.active_notes.add(note_number)
-            print(f"Note ON: {note_number} (Pin {pin}) Velocity: {velocity}")
+            print(f"Note ON: {note_number} Velocity: {velocity}")
         else:
             print(f"Note {note_number} not mapped to GPIO")
             print(f"Note ON: {note_number} Velocity: {velocity}")
 
     def note_off(self, note_number):
         if note_number in self.note_to_gpio:
-            pin = self.note_to_gpio[note_number]
+            pins = self.note_to_gpio[note_number]
             if GPIO_AVAILABLE:
-                GPIO.output(pin, GPIO.LOW)  # Close hole
+                GPIO.output(pins, GPIO.LOW)  # Close hole
             self.active_notes.discard(note_number)
-            print(f"Note OFF: {note_number} (Pin {pin})")
+            print(f"Note OFF: {note_number} (Pin {pins})")
         else:
             print(f"Note {note_number} not mapped to GPIO")
             print(f"Note OFF: {note_number}")
@@ -180,7 +192,7 @@ class MIDIBagpipePlayer:
 # Main execution
 if __name__ == "__main__":
     # Configuration
-    midi_file_path = 'MIDIFiles/devkitchenP.mid'
+    midi_file_path = 'MIDIFiles/scottish_1_(c)taylor.mid'
 
     player = MIDIBagpipePlayer(midi_file_path)
     
