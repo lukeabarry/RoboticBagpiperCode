@@ -119,7 +119,7 @@ class MIDIBagpipePlayer:
         seconds_per_tick = (self.tempo / 1000000.0) / self.ticks_per_beat
         return ticks * seconds_per_tick
         
-    def play_track(self, track_index=1):
+    def play_track(self, track_index=1, lcd=None, progress_callback=None):
         if not hasattr(self, 'midi_data'):
             print("No MIDI file loaded")
             return
@@ -135,6 +135,14 @@ class MIDIBagpipePlayer:
         self.bagpipe.start_bellows()
         time.sleep(10)  # Give bellows time to build pressure (change this as needed)
         
+        total_time = 0
+        for msg in track:
+            if msg.time > 0:
+                total_time += self.ticks_to_seconds(msg.time)
+
+        current_time = 0
+        last_update = 0
+
         self.playing = True
         
         try:
@@ -146,6 +154,11 @@ class MIDIBagpipePlayer:
                 if msg.time > 0:
                     sleep_time = self.ticks_to_seconds(msg.time)
                     time.sleep(sleep_time)
+                    current_time += sleep_time
+
+                if lcd and progress_callback and (current_time - last_update) >= 0.5:
+                    progress_callback(current_time, total_time)
+                    last_update = current_time
                 
                 # Handle different message types
                 if msg.type == 'set_tempo':
