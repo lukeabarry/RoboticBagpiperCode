@@ -5,13 +5,25 @@ try:
     import RPi.GPIO as GPIO
     GPIO_AVAILABLE = True
 except ImportError:
-    print("GPIO not available - running in simulation mode")
+    print("RPi.GPIO not available - running in simulation mode")
     GPIO_AVAILABLE = False
 
 class BagpipeController:
     def __init__(self):
         # GPIO pin mapping for bagpipe holes/keys
         # Adjust these pin numbers 
+        """
+        self.hole_to_gpio = { #change as needed
+            1: 18,  
+            2: 19,  
+            3: 20,  
+            4: 21,  
+            5: 22,  
+            6: 23,  
+            7: 24,  
+            8: 25, 
+        }
+        """
         self.note_to_gpio = {
             67: [18, 19, 20, 21, 22, 23, 24, 25],   # low G
             69: [18, 19, 20, 21, 22, 23, 24],      # A
@@ -45,13 +57,13 @@ class BagpipeController:
         GPIO.output(self.bellows_pin, GPIO.LOW)
         
     def start_bellows(self):
-        #start air supply
+        """Start the bellows/air supply"""
         if GPIO_AVAILABLE:
             GPIO.output(self.bellows_pin, GPIO.HIGH)
         print("Bellows started")
         
     def stop_bellows(self):
-        #stop air supply
+        """Stop the bellows/air supply"""
         if GPIO_AVAILABLE:
             GPIO.output(self.bellows_pin, GPIO.LOW)
         print("Bellows stopped")
