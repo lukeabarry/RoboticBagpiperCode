@@ -11,7 +11,7 @@ class Tester:
         last_event_time = 0
 
         for track_idx, track in enumerate(self.midi_data.tracks):
-            if track_idx == 0: continue 
-    
+            if track_idx == 0: continue
+
         current_time = 0
         current_tempo = self.tempo
