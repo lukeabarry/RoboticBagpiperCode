@@ -2,8 +2,7 @@
 
 Piper is an autonomous bagpipe instrument mounted on a Boston Dynamics Spot robot, developed as a capstone project at Queen's University in partnership with Ingenuity Labs. The system parses MIDI files and translates them into real-time actuator commands, physically fingering the chanter of a real bagpipe instrument.
 
-> 📹 **[Watch Piper in action](#)** ← *(replace with your YouTube link)*
-
+> 📹 **[Watch Piper in action](#)**
 ---
 
 ## System Overview
